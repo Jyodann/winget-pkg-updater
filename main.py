@@ -8,9 +8,11 @@ import pathlib
 
 yaml=YAML(typ='safe') 
 archs = []
-for application in pathlib.Path("./manifest/manifests/").rglob("*.installer.yaml"):
-    
+i = 0
+for application in pathlib.Path("./manifest/manifests").rglob("*.installer.yaml"):
     file = yaml.load(application)
     print(file["PackageIdentifier"], file["PackageVersion"])
     print(set([arch["Architecture"] for arch in file["Installers"]]))
+    i += 1
     pass
+print(i)
