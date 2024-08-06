@@ -19,5 +19,5 @@ jobs:
 
       - name: List files in the repository
         run: |
-          ls ${{ github.workspace }}
+          ls ${{ github.workspace }}/manifest/manifests
       - run: echo "🍏 This job's status is ${{ job.status }}."
