@@ -24,7 +24,7 @@ jobs:
       - name: Install Dependencies
         run: "pip3 install -r requirements.txt"
       - name: Export Winget Database
-        run: "python3 main.py"
+        run: "python3 main_multi.py"
       - name: Archive Database
         uses: actions/upload-artifact@v4
         with:

@@ -34,6 +34,7 @@ CREATE TABLE "Applications" (
 con.commit()
 
 execute_command = []
+
 for application_installer_path in pathlib.Path("./manifest/manifests/").rglob("*.installer.yaml"):
 
     # <PackageIdentifier>.installer.yaml
