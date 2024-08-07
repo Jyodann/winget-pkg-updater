@@ -1,6 +1,7 @@
 from ruamel.yaml import YAML
 import pathlib
-
+import sqlite3
+import os
 #can also use file command to determine architecture
 
 # Supported Archs:
@@ -9,10 +10,37 @@ import pathlib
 yaml=YAML(typ='safe') 
 archs = []
 i = 0
-for application in pathlib.Path("./manifest/manifests").rglob("*.installer.yaml"):
+
+if (os.path.exists("test.db")):
+    os.remove("test.db")
+
+con = sqlite3.connect('test.db')
+new_cur = con.cursor()
+
+new_cur.execute('''
+CREATE TABLE "Applications" (
+	"Id"	INTEGER NOT NULL UNIQUE,
+	"Name"	TEXT NOT NULL,
+	"Version"	TEXT NOT NULL,
+	"Achitecture"	TEXT NOT NULL,
+	PRIMARY KEY("Id" AUTOINCREMENT)
+)
+''')
+
+con.commit()
+
+execute_command = []
+for application in pathlib.Path("./manifest/manifests/").rglob("*.installer.yaml"):
     file = yaml.load(application)
-    print(file["PackageIdentifier"], file["PackageVersion"])
-    print(set([arch["Architecture"] for arch in file["Installers"]]))
-    i += 1
-    pass
+    indentifier = file["PackageIdentifier"]
+    version =  file["PackageVersion"]
+    archs = set()
+    for installers in file["Installers"]:
+        archs.add( (indentifier, version, installers["Architecture"]) )
+    
+    for data in archs:
+        execute_command.append(data)
+        i += 1
+con.executemany("INSERT INTO Applications(Name, Version, Achitecture) VALUES(?, ?, ?)", execute_command)
+con.commit()
 print(i)
