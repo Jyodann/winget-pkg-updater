@@ -47,6 +47,9 @@ def main():
         con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture) VALUES(?, ?, ?, ?, ?, ?, ?)", commands)
     con.commit()
     print(f"Added {number_of_apps} Packages with {number_of_installers} Different Installers")
+    con.close()
+   
+
 
 def get_app_data(path):
     print(f"Processing {path}")
