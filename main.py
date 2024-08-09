@@ -29,7 +29,6 @@ def main():
         "Licence"	TEXT NOT NULL,
         "ShortDescription"	TEXT NOT NULL,       
         "Architecture"	TEXT NOT NULL,  
-         "CreationDate" INTEGET NOT NULL,
     	PRIMARY KEY("Id" AUTOINCREMENT)
     )
     ''')
@@ -46,7 +45,7 @@ def main():
     for (commands, no_apps, no_arch_apps) in executed:
         number_of_apps += no_apps
         number_of_installers += no_arch_apps
-        con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture, CreationDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", commands)
+        con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture) VALUES(?, ?, ?, ?, ?, ?, ?)", commands)
     con.commit()
     print(f"Added {number_of_apps} Packages with {number_of_installers} Different Installers")
     con.close()
@@ -88,7 +87,7 @@ def get_app_data(path):
         archs = set()
         for installers in installer_file["Installers"]:
             architecture = installers["Architecture"]
-            archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture, time_creation))
+            archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture))
         
         for data in archs:
             execute_command.append(data)
