@@ -36,7 +36,7 @@ def main():
 
     con.commit()
 
-    app_paths = list(pathlib.Path("./winget-pkgs/winget-pkgs/manifests/").glob("*/"))
+    app_paths = list(pathlib.Path("./winget-pkgs/manifests/").glob("*/"))
 
     with Pool(len(app_paths)) as p:
         executed = p.map(get_app_data, app_paths)
