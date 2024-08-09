@@ -43,7 +43,7 @@ jobs:
       - name: Check Directory
         run: ls frontend
       - name: Build
-        run: cd frontend && (curl -fsSL https://deno.land/x/install/install.sh | sh && ${{ github.workspace }}/.deno/bin/deno task build)
+        run: cd frontend && (curl -fsSL https://deno.land/x/install/install.sh | sh && /home/runner/.deno/bin/deno task build)
       - name: Publish
         uses: cloudflare/pages-action@v1
         with:
