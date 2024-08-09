@@ -1,0 +1,19 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>{{ content[0]["Name"] }}</title>
+</head>
+
+<body>
+	<main>
+		{{ for app of content }}
+		{{ app["Version"] }}
+		{{ /for }}
+
+	</main>
+</body>
+
+</html>
