@@ -3,7 +3,8 @@ from ruamel.yaml import YAML
 import pathlib
 import sqlite3
 import os
-
+import time
+import subprocess
 
 #can also use file command to determine architecture
 
@@ -28,13 +29,14 @@ def main():
         "Licence"	TEXT NOT NULL,
         "ShortDescription"	TEXT NOT NULL,       
         "Architecture"	TEXT NOT NULL,  
+         "CreationDate" INTEGET NOT NULL,
     	PRIMARY KEY("Id" AUTOINCREMENT)
     )
     ''')
 
     con.commit()
 
-    app_paths = list(pathlib.Path("./manifest/manifests/").glob("*/"))
+    app_paths = list(pathlib.Path("./winget-pkgs/manifests/").glob("*/"))
 
     with Pool(len(app_paths)) as p:
         executed = p.map(get_app_data, app_paths)
@@ -44,7 +46,7 @@ def main():
     for (commands, no_apps, no_arch_apps) in executed:
         number_of_apps += no_apps
         number_of_installers += no_arch_apps
-        con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture) VALUES(?, ?, ?, ?, ?, ?, ?)", commands)
+        con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture, CreationDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", commands)
     con.commit()
     print(f"Added {number_of_apps} Packages with {number_of_installers} Different Installers")
     con.close()
@@ -61,6 +63,11 @@ def get_app_data(path):
         app_no += 1
         # <PackageIdentifier>.installer.yaml
         installer_file = yaml.load(application_installer_path)
+       
+        abs_path = str(application_installer_path.resolve())
+        #print(abs_path)
+        p = subprocess.run(["git", "log", "--follow", "--format=%ad", "--date=unix", "-1", abs_path], capture_output=True, text=True, cwd="./winget-pkgs/")
+        time_creation = int(p.stdout.strip())
         
         identifier = installer_file["PackageIdentifier"]
         version =  installer_file["PackageVersion"]
@@ -82,7 +89,7 @@ def get_app_data(path):
         archs = set()
         for installers in installer_file["Installers"]:
             architecture = installers["Architecture"]
-            archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture) )
+            archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture, time_creation))
         
         for data in archs:
             execute_command.append(data)

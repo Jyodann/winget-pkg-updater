@@ -12,8 +12,6 @@ jobs:
         with:
           repository: "microsoft/winget-pkgs"
           fetch-depth: 0
-          sparse-checkout: manifests
-          path: manifest
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}/manifest/manifests
