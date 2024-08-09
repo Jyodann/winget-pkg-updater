@@ -36,12 +36,12 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: winget-pkg-db.db
           path: ${{ github.workspace }}/frontend/
-      - name: Move Database File
-        run: mv ./winget-pkg-app.db ./frontend/
+      - name: Check Directory
+        run: ls frontend
       - name: Build
         run: cd /frontend && (curl -fsSL https://deno.land/x/install/install.sh | sh && /opt/buildhome/.deno/bin/deno task build)
       - name: Publish
