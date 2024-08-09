@@ -12,6 +12,7 @@ jobs:
         with:
           repository: "microsoft/winget-pkgs"
           fetch-depth: 0
+          path: winget-pkgs
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}

@@ -36,7 +36,7 @@ def main():
 
     con.commit()
 
-    app_paths = list(pathlib.Path("./winget-pkgs/manifests/").glob("*/"))
+    app_paths = list(pathlib.Path("./winget-pkgs/winget-pkgs/manifests/").glob("*/"))
 
     with Pool(len(app_paths)) as p:
         executed = p.map(get_app_data, app_paths)
@@ -68,7 +68,7 @@ def get_app_data(path):
         #print(abs_path)
         p = subprocess.run(["git", "log", "--follow", "--format=%ad", "--date=unix", "-1", abs_path], capture_output=True, text=True, cwd="./winget-pkgs/")
         time_creation = int(p.stdout.strip())
-        
+
         identifier = installer_file["PackageIdentifier"]
         version =  installer_file["PackageVersion"]
 
