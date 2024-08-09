@@ -49,6 +49,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: arm_ready_windows # e.g. 'my-project'
+          projectName: arm-ready-windows # e.g. 'my-project'
           directory: ${{ github.workspace }}/frontend/_site # e.g. 'dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
