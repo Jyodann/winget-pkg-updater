@@ -44,7 +44,7 @@ ORDER BY Version;
     });
 
     yield {
-      url: `/pkg/${identifier_pub_name}/${identifier_app_name}`,
+      url: `/pkgs/${identifier_pub_name}/${identifier_app_name}/index.html`,
       content: sorted,
     };
   }
