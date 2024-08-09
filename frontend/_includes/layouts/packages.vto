@@ -9,10 +9,12 @@
 
 <body>
 	<main>
-		{{ for app of content }}
-		{{ app["Version"] }}
-		{{ /for }}
 
+		<ul>
+			{{ for app of content }}
+			<li> {{ app["Version"] }} - {{ app["Architecture"] }}</li>
+			{{ /for }}
+		</ul>
 	</main>
 </body>
 

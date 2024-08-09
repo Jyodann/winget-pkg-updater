@@ -25,7 +25,7 @@ export default function* () {
 SELECT Name, Identifier, Version, Publisher, Licence, ShortDescription, group_concat(Architecture) AS AVAILABLE_ARCHS FROM Applications
 WHERE Identifier = ?
 GROUP BY Version
-ORDER BY Version;
+ORDER BY Version, AVAILABLE_ARCHS;
 	`
     );
     const app_info = app_info_statement.all(identifier);
@@ -34,15 +34,17 @@ ORDER BY Version;
       const ver = app["Version"];
       const parse_ver = coerce(ver);
       app["SemVer"] = parse_ver;
+      app["Architecture"] = app["AVAILABLE_ARCHS"].split(",").sort();
     }
 
     const sorted = app_info.sort((a, b) => {
       if (a["SemVer"] === null || b["SemVer"] === null) {
-        return 0;
+        return a["Version"] < b["Version"] ? 1 : -1;
       }
       return -a["SemVer"].compare(b["SemVer"]);
     });
 
+    console.log(sorted);
     yield {
       url: `/pkgs/${identifier_pub_name}/${identifier_app_name}/index.html`,
       content: sorted,
