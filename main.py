@@ -64,10 +64,10 @@ def get_app_data(path):
         # <PackageIdentifier>.installer.yaml
         installer_file = yaml.load(application_installer_path)
        
-        abs_path = str(application_installer_path.resolve())
+        # abs_path = str(application_installer_path.resolve())
         
-        p = subprocess.run(["git", "--no-pager", "log", "--format=%at", "-1", abs_path], capture_output=True, text=True, cwd="./winget-pkgs/")
-        time_creation = int(p.stdout.strip())
+        # p = subprocess.run(["git", "--no-pager", "log", "--format=%at", "-1", abs_path], capture_output=True, text=True, cwd="./winget-pkgs/")
+        # time_creation = int(p.stdout.strip())
         identifier = installer_file["PackageIdentifier"]
         version =  installer_file["PackageVersion"]
 
