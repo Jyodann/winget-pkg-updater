@@ -21,8 +21,7 @@ jobs:
         run: "pip3 install -r requirements.txt"
       - name: Export Winget Database
         run: "python3 main.py"
-      - name: Move Database File
-        run: mv ./winget-pkg-app.db ./frontend/
+
       - name: Archive Database
         uses: actions/upload-artifact@v4
         with:
@@ -41,6 +40,8 @@ jobs:
         with:
           name: winget-pkg-db.db
           path: ${{ github.workspace }}/frontend/
+      - name: Move Database File
+        run: mv ./winget-pkg-app.db ./frontend/
       - name: Build
         run: cd /frontend && (curl -fsSL https://deno.land/x/install/install.sh | sh && /opt/buildhome/.deno/bin/deno task build)
       - name: Publish
