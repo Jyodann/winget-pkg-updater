@@ -8,7 +8,6 @@ export default function* () {
       `
 	SELECT Identifier FROM Applications
 	GROUP BY Identifier
-    HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%yt-dlp%'
 	`
     )
     .all()!;
@@ -19,6 +18,19 @@ export default function* () {
 
     const identifier_pub_name = identifier.slice(0, index);
     const identifier_app_name = identifier.slice(index + 1);
+
+    if (curr_pub != identifier_pub_name) {
+      curr_pub = identifier_pub_name;
+      yield {
+        url: `/package/${identifier_pub_name}/index.html`,
+        layout: "layouts/package_dir.vto",
+        content: {
+          searchContent: identifier_pub_name,
+        },
+        tags: ["publisher"],
+        title: identifier_pub_name,
+      };
+    }
 
     const app_info_statement = db.prepare(
       `
