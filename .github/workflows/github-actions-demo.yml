@@ -69,7 +69,7 @@ jobs:
           deno-version: v1.x
 
       - name: Build site
-        run: deno task build
+        run: cd frontend && deno task build
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
