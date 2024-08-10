@@ -35,12 +35,16 @@ ORDER BY Version;
 	`
     );
     const app_info = app_info_statement.all(identifier);
-
+    const all_supported_archs_across_versions = new Set();
     for (const app of app_info) {
       const ver = app["Version"];
       const parse_ver = coerce(ver);
       app["SemVer"] = parse_ver;
       app["Architecture"] = app["AVAILABLE_ARCHS"].split(",").sort();
+
+      for (const arch of app["Architecture"]) {
+        all_supported_archs_across_versions.add(arch);
+      }
     }
 
     const sorted = app_info.sort((a, b) => {
@@ -56,6 +60,7 @@ ORDER BY Version;
       layout: "layouts/packages.vto",
       tags: [`pub-${identifier_pub_name}`, "package"],
       title: identifier_app_name,
+      all_supported_archs: all_supported_archs_across_versions,
     };
   }
 }

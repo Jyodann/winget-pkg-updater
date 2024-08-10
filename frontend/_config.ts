@@ -7,13 +7,17 @@ import basePath from "lume/plugins/base_path.ts";
 const site = lume({
   location: new URL("https://jyodann.github.io/winget-pkg-updater/"),
 });
-site.use(tailwindcss(/* Options */));
+site.use(tailwindcss());
 site.use(postcss());
 site.use(
   pagefind({
     indexing: {
       rootSelector: "html",
       verbose: false,
+    },
+    ui: {
+      autofocus: true,
+      showEmptyFilters: false,
     },
   })
 );
