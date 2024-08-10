@@ -8,16 +8,15 @@ layout: layouts/base_layout.vto
             Publisher: {{ content["publisherName"]}}
         </h2>
     </div>
-
 </div>
-{{ for post of search.pages(content["searchContent"]) }}
-<div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col" id="app_parent" onclick="(() => {
+
+<div class="flex flex-col gap-2 py-2">
+    {{ for post of search.pages(content["searchContent"]) }}
+    <div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col rounded-md" id="app_parent" onclick="(() => {
     window.location.href = '{{post.url}}'
     })()">
-    <p id="app_name" class="text-lg">{{ post.title }}</p>
-    <p id="app_publisher"></p>
+        <p id="app_name" class="text-lg">{{ post.title }}</p>
+        <p id="app_publisher"></p>
+    </div>
+    {{ /for }}
 </div>
-<div>
-    <a "></a>
-</div>
-{{ /for }}
