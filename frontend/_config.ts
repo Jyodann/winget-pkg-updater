@@ -3,8 +3,11 @@ import tailwindcss from "lume/plugins/tailwindcss.ts";
 import postcss from "lume/plugins/postcss.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import relativeUrls from "lume/plugins/relative_urls.ts";
-const site = lume();
+import basePath from "lume/plugins/base_path.ts";
 
+const site = lume({
+  location: new URL("https://jyodann.github.io/winget-pkg-updater/"),
+});
 site.use(tailwindcss(/* Options */));
 site.use(postcss());
 site.use(
@@ -17,5 +20,6 @@ site.use(
 );
 
 site.use(relativeUrls());
+site.use(basePath());
 
 export default site;
