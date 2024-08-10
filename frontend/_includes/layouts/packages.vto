@@ -2,61 +2,64 @@
 layout: layouts/base_layout.vto
 ---
 {{set latest_available = content[0] }}
-
-{{ tags }}
-<div class="">
-    <div class="text-2xl font-bold flex gap-2 items-end">
-        <div>
-            {{ latest_available["Name"] }}
-        </div>
-        <div class="text-xl">
-            {{ latest_available["Version"] }}
-        </div>
-    </div>
-    <div class="text-lg">
-        {{ latest_available["Publisher"]}}
-    </div>
-</div>
-
-<div>
-    <p class="font-bold text-2xl">Install Command</p>
-
-    <div class="bg-gray-700 p-2 rounded-lg w-full">
-        <code class=" text-white px-2 truncate w-min">
-            winget install -e --id {{ latest_available["Identifier"]}}
-        </code>
-    </div>
-</div>
-
-<div>
-    <p class="font-bold text-2xl">Versions</p>
-
-    {{ if latest_available["SemVer"] == null}}
-    <div class="bg-red-600 text-white p-2">
-        ! App Does Not use Semantic Versioning.
-        Versions may be out of order
-    </div>
-    {{ /if }}
-
-    <div class="grid gap-2 md:grid-cols-2">
-        {{ for app of content }}
-        {{ set arm_available =
-        (app["Architecture"].includes("arm") || app["Architecture"].includes("arm64")) ? "bg-green-500" : "bg-red-500"
-        }}
-        <div class="{{arm_available}} p-2">
-            <p class="font-semibold text-xl align-text-bottom inline-block pb-2">
-                {{ app["Version"] }}
-            </p>
-            <div class="flex gap-2">
-                {{for arch of app["Architecture"]}}
-                <div class="{{arch}} p-2">
-                    {{ arch }}
-                </div>
-                {{/for}}
+<div class="data-pagefind-body">
+    {{ tags }}
+    <div class="">
+        <div class="text-2xl font-bold flex gap-2 items-end">
+            <div>
+                {{ latest_available["Name"] }}
+            </div>
+            <div class="text-xl">
+                {{ latest_available["Version"] }}
             </div>
         </div>
-
-        {{ /for }}
-
+        <div class="text-lg">
+            {{ latest_available["Publisher"]}}
+        </div>
     </div>
+
+    <div>
+        <p class="font-bold text-2xl">Install Command</p>
+
+        <div class="bg-gray-700 p-2 rounded-lg w-full">
+            <code class=" text-white px-2 truncate w-min">
+            winget install -e --id {{ latest_available["Identifier"]}}
+        </code>
+        </div>
+    </div>
+
+    <div>
+        <p class="font-bold text-2xl">Versions</p>
+
+        {{ if latest_available["SemVer"] == null}}
+        <div class="bg-red-600 text-white p-2">
+            ! App Does Not use Semantic Versioning.
+            Versions may be out of order
+        </div>
+        {{ /if }}
+
+        <div class="grid gap-2 md:grid-cols-2">
+            {{ for app of content }}
+            {{ set arm_available =
+            (app["Architecture"].includes("arm") || app["Architecture"].includes("arm64")) ? "bg-green-500" :
+            "bg-red-500"
+            }}
+            <div class="{{arm_available}} p-2">
+                <p class="font-semibold text-xl align-text-bottom inline-block pb-2">
+                    {{ app["Version"] }}
+                </p>
+                <div class="flex gap-2">
+                    {{for arch of app["Architecture"]}}
+                    <div class="{{arch}} p-2">
+                        {{ arch }}
+                    </div>
+                    {{/for}}
+                </div>
+            </div>
+
+            {{ /for }}
+
+        </div>
+    </div>
+
 </div>
