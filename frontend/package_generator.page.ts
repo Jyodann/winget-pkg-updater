@@ -8,6 +8,7 @@ export default function* () {
       `
     	SELECT Identifier FROM Applications
     	GROUP BY Identifier
+      HAVING Identifier LIKE '%firefox%'
 	    `
     )
     .all()!;
