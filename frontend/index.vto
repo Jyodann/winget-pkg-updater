@@ -2,6 +2,27 @@
 layout: layouts/base_layout.vto
 ---
 
-Hello!
+<div class="text-4xl text-center py-4 font-outfit">
+    Windows On ARM Ready?
+</div>
 
-<div id="search"></div>
+<div class="text-2xl text-center font-outfit">
+    A simple tool to access if Windows Applications can run on the new ARM architecture.
+</div>
+
+
+<div class="text-xl text-center font-outfit">
+    Results are scrapped from <a class="underline" target="_blank"
+        href="https://github.com/microsoft/winget-pkgs">Winget's Package
+        Repository</a>
+</div>
+
+
+<div id="search" class="py-4"></div>
+
+
+<div class="text-center font-outfit italic">
+    <div>Database Last Updated: </div>
+    {{ Date(Date.now()).toString() }}
+
+</div>
