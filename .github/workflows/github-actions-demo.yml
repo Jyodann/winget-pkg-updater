@@ -22,31 +22,6 @@ jobs:
         with:
           name: winget-pkg-db.db
           path: ${{ github.workspace }}/winget-pkg-app.db
-  Deploy-Cloudflare-Pages:
-    permissions:
-      contents: read
-      deployments: write
-    runs-on: ubuntu-latest
-    needs: Generate-Winget-Pkgs-Db
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: winget-pkg-db.db
-          path: ${{ github.workspace }}/frontend/
-      - name: Check Directory
-        run: ls frontend
-      - name: Build
-        run: cd frontend && (curl -fsSL https://deno.land/x/install/install.sh | sh && /home/runner/.deno/bin/deno task build)
-      - name: Publish
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: arm-ready-windows # e.g. 'my-project'
-          directory: ${{ github.workspace }}/frontend/_site # e.g. 'dist'
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
   Deploy-Github-Pages:
     runs-on: ubuntu-latest
     permissions:
