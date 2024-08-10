@@ -1,5 +1,6 @@
 // https://lume.land/docs/core/render-order/
 
+/*
 export const renderOrder = 1;
 
 export default function* () {
@@ -11,3 +12,4 @@ export default function* () {
     },
   };
 }
+*/
