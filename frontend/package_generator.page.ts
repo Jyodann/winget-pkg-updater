@@ -6,9 +6,10 @@ export default function* () {
   const applications = db
     .prepare(
       `
-	SELECT Identifier FROM Applications
-	GROUP BY Identifier
-	`
+    	SELECT Identifier FROM Applications
+    	GROUP BY Identifier
+      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%'
+	    `
     )
     .all()!;
   let curr_pub = "";
@@ -25,7 +26,7 @@ export default function* () {
         url: `/package/${identifier_pub_name}/index.html`,
         layout: "layouts/package_dir.vto",
         content: {
-          searchContent: identifier_pub_name,
+          searchContent: `pub-${identifier_pub_name}`,
         },
         tags: ["publisher"],
         title: identifier_pub_name,
@@ -60,7 +61,7 @@ ORDER BY Version;
       url: `/package/${identifier_pub_name}/${identifier_app_name}/index.html`,
       content: sorted,
       layout: "layouts/packages.vto",
-      tags: [identifier_pub_name, "package"],
+      tags: [`pub-${identifier_pub_name}`, "package"],
       title: identifier_app_name,
     };
   }

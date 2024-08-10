@@ -17,3 +17,7 @@
 .x86 {
     @apply bg-gray-300
 }
+
+.netural {
+    @apply bg-cyan-400
+}
