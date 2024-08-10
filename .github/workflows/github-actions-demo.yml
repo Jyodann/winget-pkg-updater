@@ -49,6 +49,11 @@ jobs:
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
   Deploy-Github-Pages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    needs: Generate-Winget-Pkgs-Db
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
