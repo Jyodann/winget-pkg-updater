@@ -42,10 +42,7 @@ site.use(
       rootSelector: "html",
       verbose: false,
     },
-    ui: {
-      autofocus: true,
-      showEmptyFilters: false,
-    },
+    ui: false,
   })
 );
 

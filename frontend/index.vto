@@ -17,12 +17,102 @@ layout: layouts/base_layout.vto
         Repository</a>
 </div>
 
+<div class="p-2">
+    <input id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
+        placeholder="Search...">
 
-<div id="search" class="py-4"></div>
+    <div id="search_results" class="flex flex-col gap-2 py-2">
 
+    </div>
+</div>
+
+<!--
+Yes, I'm using HTML Templates. Fight me.
+-->
+
+<template id="result_row">
+    <div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col" id="app_parent">
+        <p id="app_name" class="text-lg"></p>
+        <p id="app_publisher">By:</p>
+    </div>
+</template>
 
 <div class="text-center font-outfit italic">
     <div>Database Last Updated: </div>
     {{ Date(Date.now()).toString() }}
-
 </div>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+<script async>
+
+    async function search_item(search_value, pagefind, tparent_div, template) {
+        const search_res = await pagefind.debouncedSearch(search_value);
+
+        if (search_res === null) {
+            // a more recent search call has been made, nothing to do
+        } else {
+            tparent_div.replaceChildren()
+            const results = search_res.results
+            for (const res of results) {
+                const clone = template.content.cloneNode(true);
+
+                const div = clone.querySelector("#app_parent")
+
+                const title = clone.querySelector("#app_name")
+                const publisher = clone.querySelector("#app_publisher")
+
+                const data = await res.data()
+                const meta_data = data.meta;
+
+                title.textContent = meta_data.title;
+                title.href = data.url;
+                tparent_div.appendChild(clone)
+
+                div.addEventListener("click", (ev) => {
+                    window.location.href = data.url
+                });
+
+                publisher.textContent = meta_data["Publisher"]
+
+                console.log(data)
+            }
+        }
+    }
+    async function init() {
+
+        if (!("content" in document.createElement("template"))) {
+            return
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+
+        const tparent_div = document.querySelector("#search_results");
+        const template = document.querySelector("#result_row");
+        const pagefind = await import("/pagefind/pagefind.js");
+        console.log(template)
+
+        pagefind.init();
+        const filters = await pagefind.filters();
+
+        const search = document.getElementById("search");
+
+        if (query !== null) {
+            search.value = query
+        }
+
+        if (search.value !== "") {
+            const search_value = search.value
+            search_item(search_value, pagefind, tparent_div, template)
+        }
+
+
+        search.addEventListener("input", async (event) => {
+            const search_value = search.value
+            search_item(search_value, pagefind, tparent_div, template)
+        })
+    }
+
+    init()
+
+</script>
