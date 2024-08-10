@@ -2,32 +2,63 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Generate-Winget-Pkgs-Db:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Checkout Microsoft Repo
-        uses: actions/checkout@v4
         with:
-          repository: "microsoft/winget-pkgs"
-          fetch-depth: 0
-          sparse-checkout: manifests
-          path: manifest
-
+          submodules: "recursive"
       - name: List files in the repository
         run: |
-          ls ${{ github.workspace }}/manifest/manifests
+          ls ${{ github.workspace }}
       - name: Install Dependencies
         run: "pip3 install -r requirements.txt"
       - name: Export Winget Database
-        run: "python3 main_multi.py"
+        run: "python3 main.py"
+
       - name: Archive Database
         uses: actions/upload-artifact@v4
         with:
           name: winget-pkg-db.db
           path: ${{ github.workspace }}/winget-pkg-app.db
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+  Deploy-Github-Pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    needs: Generate-Winget-Pkgs-Db
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: winget-pkg-db.db
+          path: ${{ github.workspace }}/frontend/
+
+      - name: Setup Deno environment
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Build site
+        run: |
+          if [[ $GITHUB_REF_NAME == 'main' ]]; then
+              cd frontend && deno task build_prod
+          else
+              cd frontend && deno task build
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "${{ github.workspace }}/frontend/_site"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

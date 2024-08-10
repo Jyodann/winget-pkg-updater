@@ -1,0 +1,12 @@
+---
+layout: layouts/base_layout.vto
+---
+{{tags}}
+{{ content["searchContent"]}}
+
+{{ for post of search.pages(content["searchContent"]) }}
+<div>
+    <a href="{{post.url}}">{{ post.title }}</a>
+</div>
+
+{{ /for }}

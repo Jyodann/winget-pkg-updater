@@ -1,73 +1,97 @@
+from multiprocessing import Pool
 from ruamel.yaml import YAML
 import pathlib
 import sqlite3
 import os
+import time
+import subprocess
+
 #can also use file command to determine architecture
 
 # Supported Archs:
 # ['x64', 'x86', 'arm64', 'arm', 'neutral']
-db_name = "winget-pkg-app.db"
-yaml=YAML(typ='safe') 
-archs = []
-application_no = 0
-num_app_and_archs = 0
-if (os.path.exists(db_name)):
-    os.remove(db_name)
-
-con = sqlite3.connect(db_name)
-new_cur = con.cursor()
-
-new_cur.execute('''
-CREATE TABLE "Applications" (
-	"Id"	INTEGER NOT NULL UNIQUE,
-    "Name"	TEXT NOT NULL,
-	"Identifier"	TEXT NOT NULL,
-	"Version"	TEXT NOT NULL,
-	"Publisher"	TEXT NOT NULL,
-    "Licence"	TEXT NOT NULL,
-    "ShortDescription"	TEXT NOT NULL,       
-    "Architecture"	TEXT NOT NULL,  
-	PRIMARY KEY("Id" AUTOINCREMENT)
-)
-''')
-
-con.commit()
-
-execute_command = []
-
-for application_installer_path in pathlib.Path("./manifest/manifests/").rglob("*.installer.yaml"):
-
-    # <PackageIdentifier>.installer.yaml
-    installer_file = yaml.load(application_installer_path)
+def main():
+    db_name = "winget-pkg-app.db"
     
-    identifier = installer_file["PackageIdentifier"]
-    version =  installer_file["PackageVersion"]
+    if (os.path.exists(db_name)):
+        os.remove(db_name)
 
-    # <PackageIdentifier>.yaml
-    manifest_version_path = application_installer_path.parent.joinpath(f"{identifier}.yaml")
-    version_info = yaml.load(manifest_version_path)
+    con = sqlite3.connect(db_name)
+    new_cur = con.cursor()
+
+    new_cur.execute('''
+    CREATE TABLE "Applications" (
+    	"Id"	INTEGER NOT NULL UNIQUE,
+        "Name"	TEXT NOT NULL,
+    	"Identifier"	TEXT NOT NULL,
+    	"Version"	TEXT NOT NULL,
+    	"Publisher"	TEXT NOT NULL,
+        "Licence"	TEXT NOT NULL,
+        "ShortDescription"	TEXT NOT NULL,       
+        "Architecture"	TEXT NOT NULL,  
+    	PRIMARY KEY("Id" AUTOINCREMENT)
+    )
+    ''')
+
+    con.commit()
+
+    app_paths = list(pathlib.Path("./winget-pkgs/manifests/").glob("*/"))
+
+    with Pool(len(app_paths)) as p:
+        executed = p.map(get_app_data, app_paths)
     
-    default_locale = version_info["DefaultLocale"]
+    number_of_apps = 0
+    number_of_installers = 0
+    for (commands, no_apps, no_arch_apps) in executed:
+        number_of_apps += no_apps
+        number_of_installers += no_arch_apps
+        con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture) VALUES(?, ?, ?, ?, ?, ?, ?)", commands)
+    con.commit()
+    print(f"Added {number_of_apps} Packages with {number_of_installers} Different Installers")
+    con.close()
+   
 
-    # <PackageIdentifier>.locale.<defaultLocale>.yaml
-    manifest_metadata_path = application_installer_path.parent.joinpath(f"{identifier}.locale.{default_locale}.yaml")
-    metadata = yaml.load(manifest_metadata_path)
 
-    publisher = metadata["Publisher"]
-    package_name = metadata["PackageName"]
-    license = metadata["License"]
-    short_desc = metadata["ShortDescription"]
-    archs = set()
-    for installers in installer_file["Installers"]:
-        architecture = installers["Architecture"]
-        archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture) )
-    
-    for data in archs:
-        execute_command.append(data)
-        num_app_and_archs += 1
+def get_app_data(path):
+    print(f"Processing {path}")
+    app_no = 0
+    arch_app_no = 0
+    yaml=YAML(typ='safe') 
+    execute_command = []
+    for application_installer_path in path.rglob("*.installer.yaml"):
+        app_no += 1
+        # <PackageIdentifier>.installer.yaml
+        installer_file = yaml.load(application_installer_path)
+       
+        # abs_path = str(application_installer_path.resolve())
+        
+        # p = subprocess.run(["git", "--no-pager", "log", "--format=%at", "-1", abs_path], capture_output=True, text=True, cwd="./winget-pkgs/")
+        # time_creation = int(p.stdout.strip())
+        identifier = installer_file["PackageIdentifier"]
+        version =  installer_file["PackageVersion"]
 
-    application_no += 1
+        # <PackageIdentifier>.yaml
+        manifest_version_path = application_installer_path.parent.joinpath(f"{identifier}.yaml")
+        version_info = yaml.load(manifest_version_path)
+        
+        default_locale = version_info["DefaultLocale"]
 
-con.executemany("INSERT INTO Applications(Name, Identifier, Version, Publisher, Licence, ShortDescription, Architecture) VALUES(?, ?, ?, ?, ?, ?, ?)", execute_command)
-con.commit()
-print(f"Added {application_no} Packages with {num_app_and_archs} Different Installers")
+        # <PackageIdentifier>.locale.<defaultLocale>.yaml
+        manifest_metadata_path = application_installer_path.parent.joinpath(f"{identifier}.locale.{default_locale}.yaml")
+        metadata = yaml.load(manifest_metadata_path)
+
+        publisher = metadata["Publisher"]
+        package_name = metadata["PackageName"]
+        license = metadata["License"]
+        short_desc = metadata["ShortDescription"]
+        archs = set()
+        for installers in installer_file["Installers"]:
+            architecture = installers["Architecture"]
+            archs.add( (package_name, identifier, version, publisher, license, short_desc, architecture))
+        
+        for data in archs:
+            execute_command.append(data)
+            arch_app_no += 1
+    return (execute_command, app_no, arch_app_no)
+if __name__ == "__main__":
+	main()

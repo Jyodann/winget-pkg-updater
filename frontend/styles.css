@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.arm64 {
+    @apply bg-violet-300
+}
+
+.arm {
+    @apply bg-blue-400
+}
+
+.x64 {
+    @apply bg-yellow-300
+}
+
+.x86 {
+    @apply bg-gray-300
+}
+
+.neutral {
+    @apply bg-cyan-400
+}

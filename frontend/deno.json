@@ -3,9 +3,10 @@
 		"lume/": "https://deno.land/x/lume@v2.2.4/"
 	},
 	"tasks": {
-		"lume": "echo \"import 'lume/cli.ts'\" | deno run -A --unstable-ffi -",
-		"build": "deno task lume",
-		"serve": "deno task lume -s"
+		"lume": "echo \"import 'lume/cli.ts'\" | deno run -A --allow-env  --unstable-ffi -",
+		"build": "ENV_TYPE=DEV deno task lume",
+		"build_prod": "ENV_TYPE=PROD deno task lume",
+		"serve": "ENV_TYPE=DEV deno task lume -s"
 	},
 	"compilerOptions": {
 		"types": [
