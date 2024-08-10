@@ -3,14 +3,8 @@ import { coerce } from "https://deno.land/x/semver@v1.4.1/mod.ts";
 const db = new Database("winget-pkg-app.db");
 
 export default function* () {
-  const applications = db
-    .prepare(
-      `
-    	SELECT Identifier FROM Applications
-    	GROUP BY Identifier
-	    `
-    )
-    .all()!;
+  const statement = Deno.env.get("app_list_statement")!;
+  const applications = db.prepare(statement).all()!;
   let curr_pub = "";
   for (const app of applications) {
     const identifier = app["Identifier"];

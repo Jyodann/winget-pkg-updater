@@ -30,6 +30,13 @@ jobs:
       id-token: write
     needs: Generate-Winget-Pkgs-Db
     steps:
+      - name: Set environment for branch
+        run: |
+          if [[ $GITHUB_REF_NAME == 'master' ]]; then
+              echo "ENV_TYPE=PROD" >> "$GITHUB_ENV"
+          else
+              echo "ENV_TYPE=DEV" >> "$GITHUB_ENV"
+          fi
       - name: Clone repository
         uses: actions/checkout@v4
 

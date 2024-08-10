@@ -18,6 +18,27 @@ site.use(
   })
 );
 
+if (Deno.env.get("ENV_TYPE") == "PROD") {
+  Deno.env.set(
+    "app_list_statement",
+    `
+    	SELECT Identifier FROM Applications
+    	GROUP BY Identifier
+    `
+  );
+} else {
+  Deno.env.set(
+    "app_list_statement",
+    `
+    	SELECT Identifier FROM Applications
+    	GROUP BY Identifier
+      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%'
+    `
+  );
+}
+
+console.log("ENV: " + Deno.env.get("ENV_TYPE"));
+
 site.use(basePath());
 
 export default site;
