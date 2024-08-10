@@ -3,23 +3,28 @@ layout: layouts/base_layout.vto
 ---
 {{set latest_available = content[0] }}
 <div>
-    <div data-pagefind-body>
+    <div>
         <div class="text-2xl font-bold flex gap-2 items-end">
-            <h1 data-pagefind-meta="title">
+            <h2 data-pagefind-meta="title" data-pagefind-body>
                 {{ latest_available["Name"] }}
-            </h1>
-            <div class="text-xl" data-pagefind-meta="Latest Version">
+            </h2>
+            <div class="text-xl" data-pagefind-meta="Latest Version" data-pagefind-body>
                 {{ latest_available["Version"] }}
             </div>
         </div>
-        <div data-pagefind-filter="Publisher" class="text-lg" data-pagefind-meta="Publisher">
+        <h2 data-pagefind-filter="Publisher" class="text-lg" data-pagefind-meta="Publisher" data-pagefind-body>
             {{ latest_available["Publisher"]}}
+        </h2>
+        <div>
+            <span data-pagefind-ignore>Lastest Version Available Architectures:</span>
+            {{ for arch of latest_available["Architecture"]}}
+            <span> {{arch}}</span>
+            {{/for}}
         </div>
-
         <div data-pagefind-meta="Architectures">
-            <span data-pagefind-ignore>Available Architectures:</span>
+            <span data-pagefind-ignore>Total Available Architectures:</span>
             {{ for arch of all_supported_archs}}
-            <span data-pagefind-filter="Architecture"> {{arch}}</span>
+            <span data-pagefind-filter="Architecture" data-pagefind-body> {{arch}}</span>
             {{/for}}
         </div>
     </div>

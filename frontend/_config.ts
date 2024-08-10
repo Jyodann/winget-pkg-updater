@@ -4,9 +4,7 @@ import postcss from "lume/plugins/postcss.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import basePath from "lume/plugins/base_path.ts";
 
-const site = lume({
-  location: new URL("https://jyodann.github.io/winget-pkg-updater/"),
-});
+const site = lume({});
 site.use(
   tailwindcss({
     options: {
@@ -42,10 +40,7 @@ site.use(
       rootSelector: "html",
       verbose: false,
     },
-    ui: {
-      autofocus: true,
-      showEmptyFilters: false,
-    },
+    ui: false,
   })
 );
 

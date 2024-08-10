@@ -16,10 +16,11 @@ export default function* () {
     if (curr_pub != identifier_pub_name) {
       curr_pub = identifier_pub_name;
       yield {
-        url: `/package/${identifier_pub_name}/index.html`,
+        url: `/${identifier_pub_name}/index.html`,
         layout: "layouts/package_dir.vto",
         content: {
           searchContent: `pub-${identifier_pub_name}`,
+          publisherName: identifier_pub_name,
         },
         tags: ["publisher"],
         title: identifier_pub_name,
@@ -55,7 +56,7 @@ ORDER BY Version;
     });
 
     yield {
-      url: `/package/${identifier_pub_name}/${identifier_app_name}/index.html`,
+      url: `/${identifier_pub_name}/${identifier_app_name}/index.html`,
       content: sorted,
       layout: "layouts/packages.vto",
       tags: [`pub-${identifier_pub_name}`, "package"],
