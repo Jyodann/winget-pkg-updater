@@ -8,10 +8,27 @@
     <title>{{ title }}</title>
 </head>
 
-<body class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4 bg-slate-800 text-white">
-    <div>
+
+
+<body class="bg-science-blue-950">
+    <header>
+        <nav class=" bg-science-blue-800 text-gray-50 py-4">
+            <div class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4 flex justify-between items-center">
+                <div class="flex ">
+                    <a class="text-2xl font-bold px-2 no-underline text-white" href="/">WOAR?</a>
+                </div>
+                <div class="flex gap-4 h-full">
+                    {{for page of search.pages("type=toplevel")}}
+                    <a class="h-full text-white {{if page.nav_label == page_name}} underline {{else}} no-underline {{/if}}"
+                        href="{{page.url}}">{{page.nav_label}}</a>
+                    {{/for}}
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4  text-white">
         {{ content }}
-    </div>
+    </main>
 </body>
 
 </html>
