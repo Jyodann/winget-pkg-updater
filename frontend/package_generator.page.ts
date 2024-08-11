@@ -8,8 +8,8 @@ export default function* () {
   let curr_pub = "";
   for (const app of applications) {
     const identifier = app["Identifier"];
+    const publisher_name = app["Publisher"];
     const index = identifier.indexOf(".");
-
     const identifier_pub_name = identifier.slice(0, index);
     const identifier_app_name = identifier.slice(index + 1);
 
@@ -20,10 +20,11 @@ export default function* () {
         layout: "layouts/package_dir.vto",
         content: {
           searchContent: `pub-${identifier_pub_name}`,
-          publisherName: identifier_pub_name,
+          publisherIdentifer: identifier_pub_name,
+          publisherName: publisher_name,
         },
         tags: ["publisher"],
-        title: identifier_pub_name,
+        title: publisher_name,
       };
     }
 

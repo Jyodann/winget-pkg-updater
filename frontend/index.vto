@@ -12,8 +12,24 @@ layout: layouts/base_layout.vto
 
 
 <div class="p-2">
+    <div class="flex flex-col md:flex-row md:items-baseline md:justify-between items-center p-2">
+        <div class="flex gap-2 items-center justify-between">
+            <div class="h-5 w-5 border border-black bg-green-800"></div>
+            <div> Native ARM Version</div>
+        </div>
+        <div class="flex gap-2 items-center">
+            <div class="h-5 w-5 border border-black bg-yellow-700"></div>
+            <div>Uses neutral architecture</div>
+        </div>
+
+        <div class="flex gap-2 items-center">
+            <div class="h-5 w-5 border border-black bg-red-800"></div>
+            <div>No Native ARM Version</div>
+        </div>
+    </div>
     <input id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
         placeholder="Search...">
+
 
     <div id="search_results" class="flex flex-col gap-2 py-2">
 
@@ -25,9 +41,21 @@ Yes, I'm using HTML Templates. Fight me.
 -->
 
 <template id="result_row">
-    <div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col" id="app_parent">
-        <p id="app_name" class="text-lg"></p>
-        <p id="app_publisher"></p>
+    <div class="p-2  hover:cursor-pointer flex flex-col" id="app_parent">
+        <div class="flex gap-2 justify-between">
+            <p class="font-bold text-lg" id="app_name" class="text-lg"></p>
+            <p class="italic" id="app_publisher"></p>
+        </div>
+        <div id="app_extra_info">
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">Latest V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_latest_archs"></span>
+            </div>
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">All V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_archs"></span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -38,10 +66,13 @@ Yes, I'm using HTML Templates. Fight me.
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 <script src="/pagefind/pagefind-ui.js"></script>
-<script async>
 
+<script async>
     async function search_item(search_value, pagefind, tparent_div, template) {
-        const search_res = await pagefind.debouncedSearch(search_value);
+        const search_res = await pagefind.debouncedSearch(search_value,
+            {
+
+            });
 
         if (search_res === null) {
             // a more recent search call has been made, nothing to do
@@ -52,10 +83,11 @@ Yes, I'm using HTML Templates. Fight me.
                 const clone = template.content.cloneNode(true);
 
                 const div = clone.querySelector("#app_parent")
-
+                const extra_info = clone.querySelector("#app_extra_info")
                 const title = clone.querySelector("#app_name")
                 const publisher = clone.querySelector("#app_publisher")
-
+                const archs = clone.querySelector("#app_archs")
+                const latest_archs = clone.querySelector("#app_latest_archs")
                 const data = await res.data()
                 const meta_data = data.meta;
 
@@ -67,9 +99,30 @@ Yes, I'm using HTML Templates. Fight me.
                     window.location.href = data.url
                 });
 
-                publisher.textContent = meta_data["Publisher"]
+                let style = "bg-red-800"
+                if ("Architectures" in meta_data) {
+                    const latest_arch_info = meta_data["Latest_Version_Architectures"]
+                    publisher.textContent = meta_data["Publisher"]
+                    archs.textContent = meta_data["Architectures"]
+                    latest_archs.textContent = latest_arch_info
 
-                console.log(data)
+
+                    if (latest_arch_info.includes("neutral")) {
+                        style = "bg-yellow-700"
+                    }
+
+                    if (latest_arch_info.includes("arm") || latest_arch_info.includes("arm")) {
+                        style = "bg-green-800"
+                    }
+
+                } else {
+                    style = "bg-slate-800"
+                    extra_info.classList.add("hidden")
+                    publisher.textContent = "Publisher"
+                }
+
+                div.classList.add(style)
+
             }
         }
     }
@@ -84,7 +137,6 @@ Yes, I'm using HTML Templates. Fight me.
         const tparent_div = document.querySelector("#search_results");
         const template = document.querySelector("#result_row");
         const pagefind = await import("/pagefind/pagefind.js");
-        console.log(template)
 
         pagefind.init();
         const filters = await pagefind.filters();

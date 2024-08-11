@@ -48,7 +48,7 @@ if (Deno.env.get("ENV_TYPE") == "PROD") {
   Deno.env.set(
     "app_list_statement",
     `
-    	SELECT Identifier FROM Applications
+    	SELECT Identifier, Publisher FROM Applications
     	GROUP BY Identifier
     `
   );
@@ -56,9 +56,10 @@ if (Deno.env.get("ENV_TYPE") == "PROD") {
   Deno.env.set(
     "app_list_statement",
     `
-    	SELECT Identifier FROM Applications
+    	SELECT Identifier, Publisher FROM Applications
     	GROUP BY Identifier
-      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%'
+      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%' OR 
+      Identifier LIKE '%microsoft%'
     `
   );
 }

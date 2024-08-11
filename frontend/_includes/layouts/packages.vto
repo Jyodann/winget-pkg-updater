@@ -3,26 +3,25 @@ layout: layouts/base_layout.vto
 ---
 {{set latest_available = content[0] }}
 <div>
-    <div>
-        <div class="text-2xl font-bold flex gap-2 items-end">
-            <h2 data-pagefind-meta="title" data-pagefind-body>
-                {{ latest_available["Name"] }}
-            </h2>
-            <div class="text-xl" data-pagefind-meta="Latest Version" data-pagefind-body>
-                {{ latest_available["Version"] }}
-            </div>
+    <div class="flex flex-col gap-1 text-center">
+        <h1 class="text-4xl font-bold text-center" data-pagefind-meta="title" data-pagefind-body>
+            {{ latest_available["Name"] }}
+        </h1>
+
+        <div class="text-xl text-center font-semibold" data-pagefind-meta="Latest Version" data-pagefind-body>
+            {{ latest_available["Version"] }}
         </div>
         <h2 data-pagefind-filter="Publisher" class="text-lg" data-pagefind-meta="Publisher" data-pagefind-body>
             {{ latest_available["Publisher"]}}
         </h2>
-        <div>
-            <span data-pagefind-ignore>Lastest Version Available Architectures:</span>
+        <div data-pagefind-meta="Latest_Version_Architectures">
+            <span data-pagefind-ignore>Lastest Version Architectures:</span>
             {{ for arch of latest_available["Architecture"]}}
-            <span> {{arch}}</span>
+            <span data-pagefind-filter="Latest_Version_Architecture"> {{arch}}</span>
             {{/for}}
         </div>
         <div data-pagefind-meta="Architectures">
-            <span data-pagefind-ignore>Total Available Architectures:</span>
+            <span data-pagefind-ignore>Total Architectures:</span>
             {{ for arch of all_supported_archs}}
             <span data-pagefind-filter="Architecture" data-pagefind-body> {{arch}}</span>
             {{/for}}

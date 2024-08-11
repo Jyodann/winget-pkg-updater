@@ -3,10 +3,15 @@ layout: layouts/base_layout.vto
 ---
 <div>
     <div class="text-4xl font-bold flex gap-2 items-end w-full">
-        <h2 class="text-center w-full" data-pagefind-filter="Publisher" data-pagefind-meta="Publisher"
+        <h1 class="text-center w-full" data-pagefind-filter="Publisher" data-pagefind-meta="Publisher"
             data-pagefind-body>
-            Publisher: {{ content["publisherName"]}}
-        </h2>
+            <span data-pagefind-ignore>Publisher: </span> {{ content["publisherName"]}}
+        </h1>
+    </div>
+    <div class="font-bold flex gap-2 items-end w-full">
+        <h1 class="text-center w-full">
+            <span data-pagefind-ignore>Identifier: </span> {{ content["publisherIdentifer"]}}
+        </h1>
     </div>
 </div>
 

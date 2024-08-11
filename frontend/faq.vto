@@ -9,14 +9,20 @@ page_name: FAQ
     Frequently Asked Questions
 </div>
 <div class="flex-col flex gap-4">
-    {{ for question of questions }}
-    <div>
-        <div class="text-2xl text-left font-outfit font-semibold">
-            {{ question["section"]["name"] }}
+    {{ for section of questions }}
+    <details>
+        <summary class="text-2xl font-semibold">
+            {{ section["section"]["name"] }}
+        </summary>
+        {{ for question of section["section"]["questions"]}}
+        <div class="text-xl text-left font-outfit font-semibold">
+            {{question.question}}
         </div>
         <div class="font-outfit">
             {{ question.answer }}
         </div>
-    </div>
+        {{/for}}
+
+    </details>
     {{/for}}
 </div>
