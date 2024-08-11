@@ -10,8 +10,11 @@ layout: layouts/base_layout.vto
     Check if Windows Apps can run on ARM.
 </div>
 
+<h1>
 
-<div class="p-2">
+</h1>
+
+<div class="p-2 pt-8">
     <div class="flex flex-col md:flex-row md:items-baseline md:justify-between items-center p-2">
         <div class="flex gap-2 items-center justify-between">
             <div class="h-5 w-5 border border-black bg-green-800"></div>
@@ -27,11 +30,11 @@ layout: layouts/base_layout.vto
             <div>No Native ARM Version</div>
         </div>
     </div>
-    <input id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
+    <input autofocus id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
         placeholder="Search...">
 
 
-    <div id="search_results" class="flex flex-col gap-2 py-2">
+    <div id="search_results" class="flex flex-col gap-2 py-4">
 
     </div>
 </div>
@@ -41,10 +44,10 @@ Yes, I'm using HTML Templates. Fight me.
 -->
 
 <template id="result_row">
-    <div class="p-2  hover:cursor-pointer flex flex-col" id="app_parent">
+    <div class="p-2  hover:cursor-pointer flex flex-col rounded-md" id="app_parent">
         <div class="flex gap-2 justify-between">
-            <p class="font-bold text-lg" id="app_name" class="text-lg"></p>
-            <p class="italic" id="app_publisher"></p>
+            <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg"></p>
+            <p class="italic basis-1/2 text-right" id="app_publisher"></p>
         </div>
         <div id="app_extra_info">
             <div class="flex gap-2 justify-between">
@@ -71,14 +74,16 @@ Yes, I'm using HTML Templates. Fight me.
     async function search_item(search_value, pagefind, tparent_div, template) {
         const search_res = await pagefind.debouncedSearch(search_value,
             {
-
+                sort: {
+                    weight: "desc"
+                }
             });
 
         if (search_res === null) {
             // a more recent search call has been made, nothing to do
         } else {
             tparent_div.replaceChildren()
-            const results = search_res.results
+            const results = search_res.results.slice(0, 10)
             for (const res of results) {
                 const clone = template.content.cloneNode(true);
 
@@ -111,7 +116,7 @@ Yes, I'm using HTML Templates. Fight me.
                         style = "bg-yellow-700"
                     }
 
-                    if (latest_arch_info.includes("arm") || latest_arch_info.includes("arm")) {
+                    if (latest_arch_info.includes("arm") || latest_arch_info.includes("arm64")) {
                         style = "bg-green-800"
                     }
 

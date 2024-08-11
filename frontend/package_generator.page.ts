@@ -43,7 +43,23 @@ ORDER BY Version;
       const parse_ver = coerce(ver);
       app["SemVer"] = parse_ver;
       app["Architecture"] = app["AVAILABLE_ARCHS"].split(",").sort();
+      app["Compatibility"] = "NO_NATIVE";
+      app["Compatibility_Colour"] = "bg-red-800";
+      app["SortWeight"] = 0;
+      if (app["Architecture"].includes("neutral")) {
+        app["Compatibility"] = "NEUTRAL";
+        app["Compatibility_Colour"] = "bg-yellow-700";
+        app["SortWeight"] = 5;
+      }
 
+      if (
+        app["Architecture"].includes("arm") ||
+        app["Architecture"].includes("arm64")
+      ) {
+        app["Compatibility"] = "NATIVE";
+        app["Compatibility_Colour"] = "bg-green-800";
+        app["SortWeight"] = 10;
+      }
       for (const arch of app["Architecture"]) {
         all_supported_archs_across_versions.add(arch);
       }
@@ -62,7 +78,9 @@ ORDER BY Version;
       layout: "layouts/packages.vto",
       tags: [`pub-${identifier_pub_name}`, "package"],
       title: identifier_app_name,
-      all_supported_archs: all_supported_archs_across_versions,
+      all_supported_archs: Array.from(
+        all_supported_archs_across_versions.values()
+      ),
     };
   }
 }
