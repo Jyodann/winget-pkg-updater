@@ -1,8 +1,16 @@
 ---
 layout: layouts/base_layout.vto
 ---
-
-<div class="text-4xl text-center py-4 font-outfit">
+{{ set all_packages = search.pages("package") }}
+{{ set all_pubs = search.pages("publisher") }}
+{{ set compatibility_chart = all_packages.map(
+(x) => x.content[0].Compatibility
+)}}
+{{ set app_count = all_packages.length }}
+{{ set native_app_count = Math.round(compatibility_chart.filter((x) => x == "NATIVE").length / app_count * 100)}}
+{{ set neutral_app_count = Math.round(compatibility_chart.filter((x) => x == "NEUTRAL").length / app_count * 100)}}
+{{ set no_native_app_count = Math.round(compatibility_chart.filter((x) => x == "NO_NATIVE").length / app_count * 100)}}
+<div class="text-4xl text-center py-4 font-outfit font-bold">
     Windows On ARM Ready?
 </div>
 
@@ -10,31 +18,54 @@ layout: layouts/base_layout.vto
     Check if Windows Apps can run on ARM.
 </div>
 
-<h1>
 
-</h1>
+
+
+
+
+
+<div class="text-xl text-center">
+    {{ all_packages.length }} Packages from {{ all_pubs.length }} publishers indexed.
+</div>
 
 <div class="p-2 pt-8">
     <div class="flex flex-col md:flex-row md:items-baseline md:justify-between items-center p-2">
         <div class="flex gap-2 items-center justify-between">
             <div class="h-5 w-5 border border-black bg-green-800"></div>
-            <div> Native ARM Version</div>
+            <div> Native ARM Version ({{native_app_count}}%)</div>
         </div>
         <div class="flex gap-2 items-center">
             <div class="h-5 w-5 border border-black bg-yellow-700"></div>
-            <div>Uses neutral architecture</div>
+            <div>Uses neutral architecture ({{neutral_app_count}}%)</div>
         </div>
 
         <div class="flex gap-2 items-center">
             <div class="h-5 w-5 border border-black bg-red-800"></div>
-            <div>No Native ARM Version</div>
+            <div>No Native ARM Version ({{no_native_app_count}}%)</div>
+        </div>
+
+
+    </div>
+
+    <div class="w-full flex overflow-hidden rounded-md">
+        <div class="bg-green-800 overflow-hidden" style="width: {{native_app_count}}%;">
+            <div class="p-2"></div>
+        </div>
+        <div class="bg-yellow-700 overflow-hidden" style="width: {{neutral_app_count}}%;">
+            <div class="p-2"></div>
+        </div>
+        <div class="bg-red-800 overflow-hidden" style="width: {{no_native_app_count}}%;">
+            <div class="p-2"></div>
         </div>
     </div>
-    <input autofocus id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
-        placeholder="Search...">
+    <div class="py-2">
+        <input autofocus id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
+            placeholder="Search...">
+    </div>
 
 
-    <div id="search_results" class="flex flex-col gap-2 py-4">
+
+    <div id="search_results" class="flex flex-col gap-2 py-2">
 
     </div>
 </div>
@@ -103,7 +134,7 @@ Yes, I'm using HTML Templates. Fight me.
                 div.addEventListener("click", (ev) => {
                     window.location.href = data.url
                 });
-
+                console.log(data)
                 let style = "bg-red-800"
                 if ("Architectures" in meta_data) {
                     const latest_arch_info = meta_data["Latest_Version_Architectures"]
@@ -123,6 +154,7 @@ Yes, I'm using HTML Templates. Fight me.
                 } else {
                     style = "bg-slate-800"
                     extra_info.classList.add("hidden")
+                    title.textContent = `${meta_data["Publisher"]} (${meta_data["publisherIdentifer"]})`
                     publisher.textContent = "Publisher"
                 }
 
