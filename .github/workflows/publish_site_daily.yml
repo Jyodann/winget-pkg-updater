@@ -1,6 +1,7 @@
-name: Manually Push DB
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Update Site every 12 Hours
+on:
+  schedule:
+    - cron: "0 */12 * * *"
 jobs:
   Generate-Winget-Pkgs-Db:
     runs-on: ubuntu-latest
@@ -48,11 +49,7 @@ jobs:
 
       - name: Build site
         run: |
-          if [[ $GITHUB_REF_NAME == 'main' ]]; then
-              cd frontend && deno task build_prod
-          else
-              cd frontend && deno task build
-          fi
+          cd frontend && deno task build_prod
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
