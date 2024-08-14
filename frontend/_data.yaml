@@ -1,26 +1,31 @@
 questions:
-  - section:
-      name: About the ARM Architecture
-      questions:
-        - question: What is the ARM Architecture?
-          answer: |
-            The ARM Architecture broadly refers to a set of reduced instructions for 
-            computers to run. This Architecture was created by Arm Holdings, and 
-            they licence this for equipment manufacturers like QualComm, Apple, to make
-            processors based on the architecture.
-        - question: Why ARM?
-          answer: |
-            The ARM Achitecture has the advantage of having a reduced instruction set, 
-            which allows for higher performance and energy efficiency. They have traditionally
-            been used in your Phones, TVs and small devices for that very reason. Recently,
-            they have also been coming to larger devices like laptops, which have traditionally
+  - question: |
+      Where did you get this data?
+    id: data-source
+    answer: |
+      The data is taken from Microsoft's Default Winget Package Directory, you can find it [here](https://github.com/microsoft/winget-pkgs/).
+      The data source is refreshed automatically around twice a day, and the source code for this site can be found on
+      GitHub [here](https://github.com/Jyodann/woar/). Note that the data comes from developer provided information,
+      and may not be fully representative of ARM Support for that software.
+  - question: |
+      What is the "Neutral" Architecture?
+    id: neutral
+    answer: |
+      Some applications use a runtime/interpreter, i.e. .NET, JVM (Java Virtual Machine), Node etc. As such, 
+      some developers may opt to list their application as Neutral, which means you have to install the runtime
+      to run the app. Most runtimes have ARM/ARM64 support, which means the app will most likely run on ARM.
+  - question: What is the ARM Architecture?
+    id: whatisarm
+    answer: |
+      The ARM Architecture broadly refers to a set of reduced instructions for 
+      computers to run. This Architecture was created by Arm Holdings, and 
+      they licence this for equipment manufacturers like QualComm, Apple, to make
+      processors based on the architecture.
+  - question: Why ARM?
+    id: whyarm
+    answer: |
+      The ARM Achitecture has the advantage of having a reduced instruction set, 
+      which allows for higher performance and energy efficiency. They have traditionally
+      been used in your Phones, TVs and small devices for that very reason. Recently,
+      they have also been coming to larger devices like laptops, which have traditionally
             relied on the older x64 architecture.
-  - section:
-      name: Differing Architecture
-      questions:
-        - question: |
-            What is the "Neutral" Architecture?
-          answer: |
-            Some applications use a runtime/interpreter, i.e. .NET, JVM (Java Virtual Machine), Node etc. As such, 
-            some developers may opt to list their application as Neutral, which means you have to install the runtime
-            to run the app. Most runtimes have ARM/ARM64 support, which means the app will most likely run on ARM.

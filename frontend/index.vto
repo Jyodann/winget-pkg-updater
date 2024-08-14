@@ -18,14 +18,11 @@ layout: layouts/base_layout.vto
     Check if Windows Apps can run on ARM.
 </div>
 
-
-
-
-
-
-
-<div class="text-xl text-center">
+<div class="text-xl text-center flex flex-col">
     {{ all_packages.length }} Packages from {{ all_pubs.length }} publishers indexed.
+    <div class="text-xs italic">
+        Last Updated: {{ Date(Date.now()).toString() }}
+    </div>
 </div>
 
 <div class="p-2 pt-8">
@@ -93,10 +90,6 @@ Yes, I'm using HTML Templates. Fight me.
     </div>
 </template>
 
-<div class="text-center font-outfit italic">
-    <div>Database Last Updated: </div>
-    {{ Date(Date.now()).toString() }}
-</div>
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 <script src="/pagefind/pagefind-ui.js"></script>

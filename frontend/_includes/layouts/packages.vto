@@ -31,7 +31,7 @@ layout: layouts/base_layout.vto
     <div>
         <p class="font-bold text-2xl">Install Command</p>
 
-        <div class="bg-gray-700 p-2 rounded-lg w-full">
+        <div class="bg-gray-700 p-2 rounded-lg w-full truncate">
             <code class=" text-white px-2 truncate w-min">
             winget install -e --id {{ latest_available["Identifier"]}}
         </code>
@@ -48,7 +48,7 @@ layout: layouts/base_layout.vto
         </div>
         {{ /if }}
 
-        <div class="grid gap-2">
+        <div class="grid gap-2 pb-4">
             {{ for app of content }}
             <div class="p-4 flex gap-2 justify-between {{app.Compatibility_Colour}}">
                 <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg">{{ app["Version"] }}</p>

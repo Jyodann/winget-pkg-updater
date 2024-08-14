@@ -58,8 +58,7 @@ if (Deno.env.get("ENV_TYPE") == "PROD") {
     `
     	SELECT Identifier, Publisher FROM Applications
     	GROUP BY Identifier
-      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%' OR 
-      Identifier LIKE '%microsoft%'
+      HAVING Identifier LIKE '%firefox%' OR Identifier LIKE '%bitwarden%'
     `
   );
 }

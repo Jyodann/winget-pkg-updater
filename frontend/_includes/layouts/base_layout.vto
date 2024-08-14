@@ -10,7 +10,7 @@
 
 
 
-<body class="bg-science-blue-950">
+<body class="bg-science-blue-950 flex flex-col min-h-screen justify-between">
     <header>
         <nav class=" bg-science-blue-800 text-gray-50 py-4">
             <div class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4 flex justify-between items-center">
@@ -26,9 +26,16 @@
             </div>
         </nav>
     </header>
-    <main class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4  text-white">
+    <main class="container mx-auto 2xl:px-96 lg:px-64 md:px-32 sm:px-16 px-4  text-white mb-auto">
         {{ content }}
     </main>
+
+    <footer class="justify-center  bg-science-blue-800 items-center flex text-white">
+        <div class="w-3/4 justify-center flex py-4 align-middle text-center flex-col">
+            <p class="text-center"> made with 💕 by <a class="underline" href="https://github.com/Jyodann">jyodann</a> ©
+                2024</p>
+        </div>
+    </footer>
 </body>
 
 </html>
