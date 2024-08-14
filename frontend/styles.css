@@ -4,30 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
-.arm64 {
-    @apply bg-violet-300
-}
+@layer base {
+    a {
+        @apply underline
+    }
 
-.arm {
-    @apply bg-blue-400
-}
+    p {
+        @apply font-outfit
+    }
 
-.x64 {
-    @apply bg-yellow-300
-}
+    .arm64 {
+        @apply bg-violet-300
+    }
 
-.x86 {
-    @apply bg-gray-300
-}
+    .arm {
+        @apply bg-blue-400
+    }
 
-.neutral {
-    @apply bg-cyan-400
-}
+    .x64 {
+        @apply bg-yellow-300
+    }
 
-body {
-    --pagefind-ui-primary: #eeeeee;
-    --pagefind-ui-text: #eeeeee;
-    --pagefind-ui-background: #152028;
-    --pagefind-ui-border: #152028;
-    --pagefind-ui-tag: #152028;
+    .x86 {
+        @apply bg-gray-300
+    }
+
+    .neutral {
+        @apply bg-cyan-400
+    }
+
+    body {
+        --pagefind-ui-primary: #eeeeee;
+        --pagefind-ui-text: #eeeeee;
+        --pagefind-ui-background: #152028;
+        --pagefind-ui-border: #152028;
+        --pagefind-ui-tag: #152028;
+    }
+
 }
