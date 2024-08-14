@@ -1,0 +1,28 @@
+---
+layout: layouts/base_layout.vto
+type: toplevel
+nav_label: FAQ
+page_name: FAQ
+---
+
+<div class="text-4xl text-center py-4 font-outfit">
+    Frequently Asked Questions
+</div>
+<div class="flex-col flex gap-4">
+    {{ for section of questions }}
+    <details>
+        <summary class="text-2xl font-semibold">
+            {{ section["section"]["name"] }}
+        </summary>
+        {{ for question of section["section"]["questions"]}}
+        <div class="text-xl text-left font-outfit font-semibold">
+            {{question.question}}
+        </div>
+        <div class="font-outfit">
+            {{ question.answer }}
+        </div>
+        {{/for}}
+
+    </details>
+    {{/for}}
+</div>

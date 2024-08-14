@@ -8,8 +8,8 @@ export default function* () {
   let curr_pub = "";
   for (const app of applications) {
     const identifier = app["Identifier"];
+    const publisher_name = app["Publisher"];
     const index = identifier.indexOf(".");
-
     const identifier_pub_name = identifier.slice(0, index);
     const identifier_app_name = identifier.slice(index + 1);
 
@@ -20,10 +20,11 @@ export default function* () {
         layout: "layouts/package_dir.vto",
         content: {
           searchContent: `pub-${identifier_pub_name}`,
-          publisherName: identifier_pub_name,
+          publisherIdentifer: identifier_pub_name,
+          publisherName: publisher_name,
         },
         tags: ["publisher"],
-        title: identifier_pub_name,
+        title: publisher_name,
       };
     }
 
@@ -42,7 +43,23 @@ ORDER BY Version;
       const parse_ver = coerce(ver);
       app["SemVer"] = parse_ver;
       app["Architecture"] = app["AVAILABLE_ARCHS"].split(",").sort();
+      app["Compatibility"] = "NO_NATIVE";
+      app["Compatibility_Colour"] = "bg-red-800";
+      app["SortWeight"] = 0;
+      if (app["Architecture"].includes("neutral")) {
+        app["Compatibility"] = "NEUTRAL";
+        app["Compatibility_Colour"] = "bg-yellow-700";
+        app["SortWeight"] = 5;
+      }
 
+      if (
+        app["Architecture"].includes("arm") ||
+        app["Architecture"].includes("arm64")
+      ) {
+        app["Compatibility"] = "NATIVE";
+        app["Compatibility_Colour"] = "bg-green-800";
+        app["SortWeight"] = 10;
+      }
       for (const arch of app["Architecture"]) {
         all_supported_archs_across_versions.add(arch);
       }
@@ -61,7 +78,9 @@ ORDER BY Version;
       layout: "layouts/packages.vto",
       tags: [`pub-${identifier_pub_name}`, "package"],
       title: identifier_app_name,
-      all_supported_archs: all_supported_archs_across_versions,
+      all_supported_archs: Array.from(
+        all_supported_archs_across_versions.values()
+      ),
     };
   }
 }

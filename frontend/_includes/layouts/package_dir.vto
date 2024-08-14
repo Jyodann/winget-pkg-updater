@@ -2,22 +2,40 @@
 layout: layouts/base_layout.vto
 ---
 <div>
-    <div class="text-4xl font-bold flex gap-2 items-end w-full">
-        <h2 class="text-center w-full" data-pagefind-filter="Publisher" data-pagefind-meta="Publisher"
+    <div data-pagefind-sort="weight:100" class="text-4xl font-bold flex gap-2 items-end w-full">
+        <h1 class="text-center w-full" data-pagefind-filter="Publisher" data-pagefind-meta="Publisher"
             data-pagefind-body>
-            Publisher: {{ content["publisherName"]}}
-        </h2>
+            <span data-pagefind-ignore>Publisher: </span> {{ content["publisherName"]}}
+        </h1>
     </div>
-
+    <div class="font-bold flex gap-2 items-end w-full">
+        <h1 class="text-center w-full" data-pagefind-meta="publisherIdentifer">
+            <span data-pagefind-ignore>Identifier: </span> {{ content["publisherIdentifer"]}}
+        </h1>
+    </div>
 </div>
-{{ for post of search.pages(content["searchContent"]) }}
-<div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col" id="app_parent" onclick="(() => {
+
+<div class="flex flex-col gap-2 py-2">
+    {{ for post of search.pages(content["searchContent"]) }}
+    {{ set latest_ver = post.content[0]}}
+    <div class="p-2 {{latest_ver.Compatibility_Colour }} hover:cursor-pointer flex flex-col rounded-md" id="app_parent"
+        onclick="(() => {
     window.location.href = '{{post.url}}'
     })()">
-    <p id="app_name" class="text-lg">{{ post.title }}</p>
-    <p id="app_publisher"></p>
+        <div class="flex gap-2 justify-between">
+            <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg">{{ post.title }}</p>
+            <p class="italic basis-1/2 text-right" id="app_publisher"> {{ latest_ver["Publisher"]}} </p>
+        </div>
+        <div id="app_extra_info">
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">Latest V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_latest_archs">{{ latest_ver["Architecture"].join(" ") }}</span>
+            </div>
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">All V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_archs">{{ post.all_supported_archs.join(" ") }}</span>
+            </div>
+        </div>
+    </div>
+    {{ /for }}
 </div>
-<div>
-    <a "></a>
-</div>
-{{ /for }}

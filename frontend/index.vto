@@ -1,25 +1,69 @@
 ---
 layout: layouts/base_layout.vto
 ---
-
-<div class="text-4xl text-center py-4 font-outfit">
+{{ set all_packages = search.pages("package") }}
+{{ set all_pubs = search.pages("publisher") }}
+{{ set compatibility_chart = all_packages.map(
+(x) => x.content[0].Compatibility
+)}}
+{{ set app_count = all_packages.length }}
+{{ set native_app_count = Math.round(compatibility_chart.filter((x) => x == "NATIVE").length / app_count * 100)}}
+{{ set neutral_app_count = Math.round(compatibility_chart.filter((x) => x == "NEUTRAL").length / app_count * 100)}}
+{{ set no_native_app_count = Math.round(compatibility_chart.filter((x) => x == "NO_NATIVE").length / app_count * 100)}}
+<div class="text-4xl text-center py-4 font-outfit font-bold">
     Windows On ARM Ready?
 </div>
 
 <div class="text-2xl text-center font-outfit">
-    A simple tool to access if Windows Applications can run on the new ARM architecture.
+    Check if Windows Apps can run on ARM.
 </div>
 
 
-<div class="text-xl text-center font-outfit">
-    Results are scrapped from <a class="underline" target="_blank"
-        href="https://github.com/microsoft/winget-pkgs">Winget's Package
-        Repository</a>
+
+
+
+
+
+<div class="text-xl text-center">
+    {{ all_packages.length }} Packages from {{ all_pubs.length }} publishers indexed.
 </div>
 
-<div class="p-2">
-    <input id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
-        placeholder="Search...">
+<div class="p-2 pt-8">
+    <div class="flex flex-col md:flex-row md:items-baseline md:justify-between items-center p-2">
+        <div class="flex gap-2 items-center justify-between">
+            <div class="h-5 w-5 border border-black bg-green-800"></div>
+            <div> Native ARM Version ({{native_app_count}}%)</div>
+        </div>
+        <div class="flex gap-2 items-center">
+            <div class="h-5 w-5 border border-black bg-yellow-700"></div>
+            <div>Uses neutral architecture ({{neutral_app_count}}%)</div>
+        </div>
+
+        <div class="flex gap-2 items-center">
+            <div class="h-5 w-5 border border-black bg-red-800"></div>
+            <div>No Native ARM Version ({{no_native_app_count}}%)</div>
+        </div>
+
+
+    </div>
+
+    <div class="w-full flex overflow-hidden rounded-md">
+        <div class="bg-green-800 overflow-hidden" style="width: {{native_app_count}}%;">
+            <div class="p-2"></div>
+        </div>
+        <div class="bg-yellow-700 overflow-hidden" style="width: {{neutral_app_count}}%;">
+            <div class="p-2"></div>
+        </div>
+        <div class="bg-red-800 overflow-hidden" style="width: {{no_native_app_count}}%;">
+            <div class="p-2"></div>
+        </div>
+    </div>
+    <div class="py-2">
+        <input autofocus id="search" type="text" class="w-full p-4 text-white bg-slate-900 rounded-lg text-lg"
+            placeholder="Search...">
+    </div>
+
+
 
     <div id="search_results" class="flex flex-col gap-2 py-2">
 
@@ -31,9 +75,21 @@ Yes, I'm using HTML Templates. Fight me.
 -->
 
 <template id="result_row">
-    <div class="p-2 bg-slate-950 hover:cursor-pointer flex flex-col" id="app_parent">
-        <p id="app_name" class="text-lg"></p>
-        <p id="app_publisher"></p>
+    <div class="p-2  hover:cursor-pointer flex flex-col rounded-md" id="app_parent">
+        <div class="flex gap-2 justify-between">
+            <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg"></p>
+            <p class="italic basis-1/2 text-right" id="app_publisher"></p>
+        </div>
+        <div id="app_extra_info">
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">Latest V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_latest_archs"></span>
+            </div>
+            <div class="flex gap-2 justify-between">
+                <div class="font-semibold basis-1/2">All V. Archs: </div><span class="basis-1/2 text-right"
+                    id="app_archs"></span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -44,24 +100,30 @@ Yes, I'm using HTML Templates. Fight me.
 
 <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
 <script src="/pagefind/pagefind-ui.js"></script>
-<script async>
 
+<script async>
     async function search_item(search_value, pagefind, tparent_div, template) {
-        const search_res = await pagefind.debouncedSearch(search_value);
+        const search_res = await pagefind.debouncedSearch(search_value,
+            {
+                sort: {
+                    weight: "desc"
+                }
+            });
 
         if (search_res === null) {
             // a more recent search call has been made, nothing to do
         } else {
             tparent_div.replaceChildren()
-            const results = search_res.results
+            const results = search_res.results.slice(0, 10)
             for (const res of results) {
                 const clone = template.content.cloneNode(true);
 
                 const div = clone.querySelector("#app_parent")
-
+                const extra_info = clone.querySelector("#app_extra_info")
                 const title = clone.querySelector("#app_name")
                 const publisher = clone.querySelector("#app_publisher")
-
+                const archs = clone.querySelector("#app_archs")
+                const latest_archs = clone.querySelector("#app_latest_archs")
                 const data = await res.data()
                 const meta_data = data.meta;
 
@@ -72,10 +134,32 @@ Yes, I'm using HTML Templates. Fight me.
                 div.addEventListener("click", (ev) => {
                     window.location.href = data.url
                 });
-
-                publisher.textContent = meta_data["Publisher"]
-
                 console.log(data)
+                let style = "bg-red-800"
+                if ("Architectures" in meta_data) {
+                    const latest_arch_info = meta_data["Latest_Version_Architectures"]
+                    publisher.textContent = meta_data["Publisher"]
+                    archs.textContent = meta_data["Architectures"]
+                    latest_archs.textContent = latest_arch_info
+
+
+                    if (latest_arch_info.includes("neutral")) {
+                        style = "bg-yellow-700"
+                    }
+
+                    if (latest_arch_info.includes("arm") || latest_arch_info.includes("arm64")) {
+                        style = "bg-green-800"
+                    }
+
+                } else {
+                    style = "bg-slate-800"
+                    extra_info.classList.add("hidden")
+                    title.textContent = `${meta_data["Publisher"]} (${meta_data["publisherIdentifer"]})`
+                    publisher.textContent = "Publisher"
+                }
+
+                div.classList.add(style)
+
             }
         }
     }
@@ -90,7 +174,6 @@ Yes, I'm using HTML Templates. Fight me.
         const tparent_div = document.querySelector("#search_results");
         const template = document.querySelector("#result_row");
         const pagefind = await import("/pagefind/pagefind.js");
-        console.log(template)
 
         pagefind.init();
         const filters = await pagefind.filters();

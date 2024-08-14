@@ -9,9 +9,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: "recursive"
+      - name: Pull Latest Changes from Winget-Pkgs
+        run: |
+          cd winget-pkgs && git submodule update --remote --recursive --merge
       - name: List files in the repository
         run: |
-          ls ${{ github.workspace }}
+          cd .. && ls ${{ github.workspace }}
       - name: Install Dependencies
         run: "pip3 install -r requirements.txt"
       - name: Export Winget Database
