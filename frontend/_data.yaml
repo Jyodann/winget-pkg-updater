@@ -29,3 +29,11 @@ questions:
       been used in your Phones, TVs and small devices for that very reason. Recently,
       they have also been coming to larger devices like laptops, which have traditionally
             relied on the older x64 architecture.
+
+metas:
+  site: Windows On Arm Ready? (WOAR)
+  twitter: "@jyodann"
+  lang: en
+  generator: true
+  description: "=description"
+  title: "=title"
