@@ -3,7 +3,11 @@ import tailwindcss from "lume/plugins/tailwindcss.ts";
 import postcss from "lume/plugins/postcss.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import basePath from "lume/plugins/base_path.ts";
-
+import metas from "lume/plugins/metas.ts";
+import sitemap from "lume/plugins/sitemap.ts";
+import robots from "lume/plugins/robots.ts";
+import minifyHTML from "lume/plugins/minify_html.ts";
+import terser from "lume/plugins/terser.ts";
 const site = lume({});
 site.use(
   tailwindcss({
@@ -66,5 +70,14 @@ if (Deno.env.get("ENV_TYPE") == "PROD") {
 console.log("ENV: " + Deno.env.get("ENV_TYPE"));
 
 site.use(basePath());
+site.use(metas(/* Options */));
+site.use(sitemap(/* Options */));
+site.use(robots(/* Options */));
 
+site.use(terser(/* Options */));
+site.use(
+  minifyHTML({
+    extensions: [".css", ".html"],
+  })
+);
 export default site;
