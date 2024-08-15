@@ -24,7 +24,7 @@ export default function* () {
           publisherName: publisher_name,
         },
         tags: ["publisher"],
-        title: publisher_name,
+        title: `Publisher: ${publisher_name}`,
       };
     }
 
@@ -77,10 +77,11 @@ ORDER BY Version;
       content: sorted,
       layout: "layouts/packages.vto",
       tags: [`pub-${identifier_pub_name}`, "package"],
-      title: identifier_app_name,
+      title: `Package: ${identifier_app_name}`,
       all_supported_archs: Array.from(
         all_supported_archs_across_versions.values()
       ),
+      description: `${app_info[0]["Name"]} (${identifier_app_name}) - Supports ${app_info[0]["Architecture"]}`,
     };
   }
 }

@@ -23,7 +23,7 @@ layout: layouts/base_layout.vto
     window.location.href = '{{post.url}}'
     })()">
         <div class="flex gap-2 justify-between">
-            <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg">{{ post.title }}</p>
+            <p class="font-bold text-lg basis-1/2" id="app_name" class="text-lg">{{ post.children[0]["Name"] }}</p>
             <p class="italic basis-1/2 text-right" id="app_publisher"> {{ latest_ver["Publisher"]}} </p>
         </div>
         <div id="app_extra_info">
