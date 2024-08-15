@@ -5,7 +5,7 @@ questions:
     answer: |
       The data is taken from Microsoft's Default Winget Package Directory, you can find it [here](https://github.com/microsoft/winget-pkgs/).
       The data source is refreshed automatically around twice a day, and the source code for this site can be found on
-      GitHub [here](https://github.com/Jyodann/woar/). Note that the data comes from developer provided information,
+      GitHub [here](https://github.com/Jyodann/woar/). (More Technical Details/Questions there too!) Note that the data comes from developer provided information,
       and may not be fully representative of ARM Support for that software.
   - question: |
       What is the "Neutral" Architecture?
@@ -14,6 +14,11 @@ questions:
       Some applications use a runtime/interpreter, i.e. .NET, JVM (Java Virtual Machine), Node etc. As such, 
       some developers may opt to list their application as Neutral, which means you have to install the runtime
       to run the app. Most runtimes have ARM/ARM64 support, which means the app will most likely run on ARM.
+  - question: |
+      What about Prism?
+    id: prism
+    answer: |
+      [Prism](https://learn.microsoft.com/en-us/windows/arm/apps-on-arm-x86-emulation#prism) is Microsoft's emulation layer to run x86 applications on the ARM platform, similar to Apple's [Rosetta 2](https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment) for their M-Series chips. This tool does **not** scan applications for their performance / compatibility with Prism. As of now, any applications marked x86 only will be considered not compatible with Windows on ARM, results may vary if run on actual hardware with emulation.
   - question: What is the ARM Architecture?
     id: whatisarm
     answer: |
