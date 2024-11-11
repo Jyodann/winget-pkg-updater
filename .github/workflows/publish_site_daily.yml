@@ -43,9 +43,7 @@ jobs:
           path: ${{ github.workspace }}/frontend/
 
       - name: Setup Deno environment
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
+        uses: denoland/setup-deno@v2
 
       - name: Build site
         run: |
