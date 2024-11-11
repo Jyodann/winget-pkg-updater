@@ -1,6 +1,6 @@
 # WOAR (Windows On ARM Ready?)
 
-[![Update Site every 12 Hours](https://github.com/Jyodann/woar/actions/workflows/publish_site_daily.yml/badge.svg?branch=main)](https://github.com/Jyodann/woar/actions/workflows/publish_site_daily.yml)
+[![Update Site every half day](https://github.com/Jyodann/woar/actions/workflows/publish_site_daily.yml/badge.svg?branch=main)](https://github.com/Jyodann/woar/actions/workflows/publish_site_daily.yml)
 
 ## What is this?
 
