@@ -4,8 +4,10 @@
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
-    "build": "deno task lume",
-    "serve": "deno task lume -s"
+    "build": "ENV_TYPE=DEV deno task lume",
+		"build_prod": "ENV_TYPE=PROD deno task lume",
+		"serve": "ENV_TYPE=DEV deno task lume -s",
+		"serve_prod": "ENV_TYPE=PROD deno task lume -s"
   },
   "compilerOptions": {
     "types": [
