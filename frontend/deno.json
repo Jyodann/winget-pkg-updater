@@ -3,7 +3,7 @@
     "lume/": "https://deno.land/x/lume@v2.4.2/"
   },
   "tasks": {
-    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
+    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A --v8-flags=--max-old-space-size=8192 --unstable-ffi -",
     "build": "ENV_TYPE=DEV deno task lume",
 		"build_prod": "ENV_TYPE=PROD deno task lume",
 		"serve": "ENV_TYPE=DEV deno task lume -s",
